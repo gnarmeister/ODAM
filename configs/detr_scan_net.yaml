@@ -8,11 +8,12 @@ dim_feedforward: 2048
 hidden_dim: 256
 dropout: 0.1
 nheads: 8
-num_queries: 100
+num_classes: 100
+num_queries: 10
 pre_norm: False
 aux_loss: True
 set_cost_class: 1
-set_cost_bbox: 5
+set_cost_bbox: 3
 set_cost_giou: 2
 mask_loss_coef: 1
 dice_loss_coef: 1
@@ -33,5 +34,9 @@ sinkhorn_iterations: 100
 match_threshold: 0.2
 
 dataset:
-  img_h: 968
-  img_w: 1296
+  img_h: 720
+  img_w: 1280
+
+train:
+  epochs: 40
+  batch_size: 5
