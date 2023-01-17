@@ -1,6 +1,8 @@
 /result
 /experiments
 /data
+/src/datasets/*
+/src/train/log/*
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
