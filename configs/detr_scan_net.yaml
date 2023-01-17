@@ -21,7 +21,7 @@ bbox_loss_coef: 5
 giou_loss_coef: 2
 eos_coef: 0.1
 dataset_file: "scan_net"
-device: "cuda:3"
+device: "cuda:2"
 masks: False
 dilation: False
 
