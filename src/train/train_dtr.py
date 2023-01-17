@@ -22,7 +22,8 @@ def train_dtr(cfg, device, data_path, log_path, model_path="none"):
     model, criterion, _ = build_model(cfg)
 
     if model_path != "none":
-        model.load_state_dict(torch.load(model_path))
+        model.load_state_dict(torch.load(model_path, map_location=device))
+        model.to(device)
 
     scaler = GradScaler()
     optimizer = torch.optim.Adam(model.parameters(), lr=cfg.lr)
@@ -72,6 +73,7 @@ def train_dtr(cfg, device, data_path, log_path, model_path="none"):
             loss = (
                 weight_dict["loss_ce"] * loss_dict["loss_ce"]
                 + weight_dict["loss_bbox"] * loss_dict["loss_bbox"]
+                + weight_dict["loss_giou"] * loss_dict["loss_giou"]
                 + weight_dict["loss_angle"] * loss_dict["loss_angle"]
                 + weight_dict["loss_offset"] * loss_dict["loss_offset"]
                 + weight_dict["loss_size"] * loss_dict["loss_size"]
@@ -81,19 +83,19 @@ def train_dtr(cfg, device, data_path, log_path, model_path="none"):
 
             scaler.scale(loss).backward()
 
-            if step % 20 == 0:
+            if step % 10 == 0:
                 scaler.step(optimizer)
                 scaler.update()
                 optimizer.zero_grad()
-
                 print("-" * 100)
                 print(
                     "iter:",
                     "%04d" % (step),
-                    "total: {:.9f}, ce: {:.9f}, bbox: {:.9f}, angle: {:.9f}, offset: {:.9f}, size: {:.9f}, depth: {:.9f}".format(
+                    "total: {:.9f}, ce: {:.9f}, bbox: {:.9f}, giou: {:.9f}, angle: {:.9f}, offset: {:.9f}, size: {:.9f}, depth: {:.9f}".format(
                         loss,
                         loss_dict["loss_ce"],
                         loss_dict["loss_bbox"],
+                        loss_dict["loss_giou"],
                         loss_dict["loss_angle"],
                         loss_dict["loss_offset"],
                         loss_dict["loss_size"],
@@ -142,11 +144,11 @@ def train_one_img(cfg, device, data_path, log_path):
         loss_dict["train_total"] = loss
 
         scaler.scale(loss).backward()
-        scaler.step(optimizer)
-        scaler.update()
 
-        if step % 50 == 0:
+        if step % 20 == 0:
             # train_loss = {f"train_{k}": v for k, v in loss_dict.items()}
+            scaler.step(optimizer)
+            scaler.update()
             print("-" * 100)
             print(
                 "iter:",
