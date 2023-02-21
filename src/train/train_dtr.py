@@ -182,11 +182,11 @@ def main():
     os.mkdir(log_path)
     print("saving at {}".format(log_path))
 
-    model_path = "ODAM/src/train/log/23011216251146/model_40.pth"
+    model_path = "ODAM/src/train/log/23012516393649/model_40.pth"
 
     device = cfg.device
     # train_one_img(cfg, device, data_path, log_path)
-    train_dtr(cfg, device, data_path, log_path, model_path)
+    train_dtr(cfg, device, data_path, log_path)
 
 
 if __name__ == "__main__":
