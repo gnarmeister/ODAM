@@ -1,7 +1,8 @@
 /result
 /experiments
 /data
-/src/datasets/*
+/src/datasets/images/*
+/src/datasets/frame_datas/*
 /src/train/log/*
 
 # Byte-compiled / optimized / DLL files
